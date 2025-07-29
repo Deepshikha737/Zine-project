@@ -1,0 +1,163 @@
+# LLM-Powered Intelligent Query-Retrieval System Configuration
+
+# Document Processing Configuration
+document_processor:
+  chunk_size: 1000              # Number of words per text chunk
+  chunk_overlap: 200            # Overlap between consecutive chunks
+  supported_formats:
+    - .pdf
+    - .docx
+    - .doc
+    - .txt
+    - .eml
+    - .msg
+
+# Embedding Engine Configuration
+embedding_engine:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"  # Free embedding model
+  index_type: "flat"            # FAISS index type: flat, ivf, hnsw
+  dimension: 384                # Embedding dimension (384 for MiniLM-L6-v2)
+  batch_size: 32               # Batch size for embedding generation
+  normalize_embeddings: true   # Normalize embeddings for better search
+
+# LLM Engine Configuration
+llm_engine:
+  model_name: "microsoft/DialoGPT-medium"  # Free conversational model
+  max_length: 512              # Maximum token length for generation
+  temperature: 0.7             # Sampling temperature (0.0 = deterministic)
+  do_sample: true             # Enable sampling for diverse outputs
+  device: "auto"              # Device: auto, cpu, cuda
+
+# Search Configuration
+search:
+  top_k: 10                   # Number of top results to retrieve
+  similarity_threshold: 0.3    # Minimum similarity score threshold
+  rerank_top_k: 5             # Number of results to rerank
+  domain_filtering: true       # Enable domain-based filtering
+
+# System Paths
+paths:
+  index_path: "./data/index"          # Path for storing search index
+  documents_path: "./data/documents"   # Path for document storage
+  exports_path: "./exports"           # Path for exports
+  logs_path: "./logs"                 # Path for log files
+
+# Domain-Specific Settings
+domains:
+  insurance:
+    keywords:
+      - policy
+      - coverage
+      - claim
+      - deductible
+      - premium
+      - benefit
+      - medical
+      - health
+    intent_patterns:
+      coverage_check:
+        - "does.*cover"
+        - "is.*covered"
+        - "coverage.*for"
+      condition_lookup:
+        - "what.*conditions"
+        - "requirements.*for"
+        - "eligibility"
+  
+  legal:
+    keywords:
+      - contract
+      - agreement
+      - liability
+      - terms
+      - clause
+      - legal
+      - law
+    intent_patterns:
+      clause_lookup:
+        - "what.*clause"
+        - "find.*terms"
+        - "contract.*states"
+      liability_check:
+        - "liable.*for"
+        - "responsibility"
+  
+  hr:
+    keywords:
+      - employee
+      - benefits
+      - leave
+      - vacation
+      - sick
+      - performance
+      - workplace
+    intent_patterns:
+      policy_lookup:
+        - "what.*policy"
+        - "rules.*about"
+        - "allowed.*to"
+      benefit_check:
+        - "benefits.*include"
+        - "entitled.*to"
+  
+  compliance:
+    keywords:
+      - regulation
+      - compliance
+      - audit
+      - gdpr
+      - privacy
+      - data
+    intent_patterns:
+      compliance_check:
+        - "comply.*with"
+        - "meet.*requirements"
+        - "regulation.*states"
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: false               # Auto-reload on code changes (dev only)
+  log_level: "info"          # Logging level: debug, info, warning, error
+  cors_origins:              # CORS allowed origins
+    - "*"
+  max_upload_size: 50_000_000  # Maximum file upload size (50MB)
+
+# Performance Settings
+performance:
+  max_concurrent_queries: 10   # Maximum concurrent query processing
+  query_timeout: 30           # Query timeout in seconds
+  embedding_cache_size: 1000  # Number of embeddings to cache
+  index_save_interval: 300    # Save index every N seconds
+
+# Security Settings
+security:
+  enable_auth: false         # Enable authentication (not implemented)
+  rate_limiting: false       # Enable rate limiting (not implemented)
+  allowed_file_types:        # Restrict file types for security
+    - .pdf
+    - .docx
+    - .txt
+  max_file_size: 10_000_000  # Maximum individual file size (10MB)
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_rotation: true
+  max_file_size: "10MB"
+  backup_count: 5
+
+# Development Settings (for hackathon demo)
+development:
+  create_sample_data: true    # Create sample documents on startup
+  demo_mode: true            # Enable demo-specific features
+  verbose_logging: true      # Enable detailed logging
+  auto_index_sample_docs: true  # Automatically index sample documents
+
+# Model Fallback Configuration
+model_fallback:
+  enable_fallback: true      # Enable fallback to rule-based system
+  fallback_confidence: 0.6   # Confidence score for rule-based answers
+  offline_mode: false        # Work without internet connection
